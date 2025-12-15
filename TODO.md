@@ -1,0 +1,4 @@
+- [ ] Remove unnecessary commented use statements in VoitureController.php
+- [ ] Fix syntax error in store method (extra brace)
+- [ ] Update index method to return JSON response
+- [ ] Update show method to return JSON response
