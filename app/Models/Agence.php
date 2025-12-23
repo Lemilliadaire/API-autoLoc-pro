@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Voiture;
 use App\Models\Reservation;
@@ -18,6 +19,13 @@ class Agence extends Model
         'ville',
         'logo',
     ];
+
+    protected $appends = ['logo_url'];
+
+    public function getLogoUrlAttribute()
+    {
+        return $this->logo ? Storage::url($this->logo) : null;
+    }
 
     public function voitures()
     {

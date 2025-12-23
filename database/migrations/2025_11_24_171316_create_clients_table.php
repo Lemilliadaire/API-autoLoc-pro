@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('adresse');
             $table->string('telephone');
             $table->date('date_naissance');
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

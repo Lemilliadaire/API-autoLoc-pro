@@ -20,7 +20,7 @@ class AuthController extends Controller
             'telephone' => 'nullable|string|max:20',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'password-confirm' => 'required|string|min:8|same:password',
+            'password_confirm' => 'required|string|min:8|same:password',
             'role' => 'string|in:user,admin',
         ]);
 
@@ -30,7 +30,7 @@ class AuthController extends Controller
             'telephone' => $validated['telephone'] ?? null,
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'password-confirm' => Hash::make($validated['password-confirm']),
+            'password_confirm' => Hash::make($validated['password_confirm']),
             'role' => $validated['role'] ?? 'user',
         ]);
 

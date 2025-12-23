@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AgenceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategorieController;
@@ -15,39 +16,27 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/voitures', [VoitureController::class, 'index']);
-Route::get('/voitures/{voiture}', [VoitureController::class, 'show']);
-Route::get('/categories', [CategorieController::class, 'index']);
-Route::get('/categories/{categorie}', [CategorieController::class, 'show']);
-Route::get('/agences', [AgenceController::class, 'index']);
-Route::get('/agences/{agence}', [AgenceController::class, 'show']);
+
+// Routes publiques pour la consultation (index et show)
+Route::apiResource('voitures', VoitureController::class)->only(['index', 'show']);
+Route::apiResource('categories', CategorieController::class)->only(['index', 'show']);
+Route::apiResource('agences', AgenceController::class)->only(['index', 'show']);
 
 // protection routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/user', fn (Request $request) => $request->user());
 
     Route::apiResource('clients', ClientController::class);
+    Route::post('/clients/{id}/photo', [ClientController::class, 'updatePhoto']);
+    Route::apiResource('admins', AdminController::class);
+    Route::post('/admins/{id}/photo', [AdminController::class, 'updatePhoto']);
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('paiements', PaiementController::class);
 
-    // Admin only routes (simplified for now, can be middleware restricted later)
-    // la gestion des agences, categories, voitures
-    Route::post('/agences', [AgenceController::class, 'store']);
-    Route::put('/agences/{agence}', [AgenceController::class, 'update']);
-    Route::delete('/agences/{agence}', [AgenceController::class, 'destroy']);
-
-    Route::post('/categories', [CategorieController::class, 'store']);
-    Route::put('/categories/{categorie}', [CategorieController::class, 'update']);
-    Route::delete('/categories/{categorie}', [CategorieController::class, 'destroy']);
-
-    Route::post('/voitures', [VoitureController::class, 'store']);
-    Route::put('/voitures/{voiture}', [VoitureController::class, 'update']);
-    Route::delete('/voitures/{voiture}', [VoitureController::class, 'destroy']);
+    // Routes d'administration (création, mise à jour, suppression)
+    Route::apiResource('voitures', VoitureController::class)->except(['index', 'show']);
+    Route::apiResource('categories', CategorieController::class)->except(['index', 'show']);
+    Route::apiResource('agences', AgenceController::class)->except(['index', 'show']);
 });
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-

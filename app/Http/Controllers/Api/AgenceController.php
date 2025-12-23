@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Agence;
+use Illuminate\Support\Facades\Storage;
 
 class AgenceController extends Controller
 {
@@ -32,9 +33,9 @@ class AgenceController extends Controller
             'logo' => 'nullable|image',
         ]);
 
-         $file = $request->file('logo');
-        if ($file)
-            $path = $file->store('logos', 'public');
+        if ($request->hasFile('logo')) {
+            $validated['logo'] = $request->file('logo')->store('agences_logos', 'public');
+        }
 
         $agence = Agence::create($validated);
 
@@ -65,9 +66,13 @@ class AgenceController extends Controller
             'ville' => 'string',
             'logo' => 'nullable|image',
         ]);
-            $file = $request->file('logo');
-        if ($file)
-            $path = $file->store('logos', 'public');
+
+        if ($request->hasFile('logo')) {
+            if ($agence->logo) {
+                Storage::disk('public')->delete($agence->logo);
+            }
+            $validated['logo'] = $request->file('logo')->store('agences_logos', 'public');
+        }
 
         $agence->update($validated);
 

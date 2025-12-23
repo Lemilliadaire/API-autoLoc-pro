@@ -25,12 +25,13 @@ class DatabaseSeeder extends Seeder
             'telephone' => '+0022879808915',
             'email' => 'jean@example.com',
             'password' => Hash::make('jeannot123'),
-            'password-confirm' => Hash::make('jeannot123'),
+            'password_confirm' => Hash::make('jeannot123'),
             'role' => 'admin',
         ]);
 
         Admin::create([
             'user_id' => $user->id,
+            'photo_profil' => 'admins_photos/docteur5.png',
         ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Voiture;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class VoitureController extends Controller
 {
@@ -49,10 +50,10 @@ class VoitureController extends Controller
             'photo' => 'nullable|image',
 
         ]);
-
-         $file = $request->file('photo');
-        if ($file)
-            $path = $file->store('photos', 'public');
+        
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('voitures_photos', 'public');
+        }
 
         $voiture = Voiture::create($validated);
 
@@ -90,9 +91,12 @@ class VoitureController extends Controller
             'photo' => 'nullable|image',
         ]);
 
-            $file = $request->file('photo');
-        if ($file)
-            $path = $file->store('photos', 'public');
+        if ($request->hasFile('photo')) {
+            if ($voiture->photo) {
+                Storage::disk('public')->delete($voiture->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('voitures_photos', 'public');
+        }
 
         $voiture->update($validated);
 
