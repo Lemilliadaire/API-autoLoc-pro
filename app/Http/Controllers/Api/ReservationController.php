@@ -19,9 +19,9 @@ class ReservationController extends Controller
     public function index()
     {
         if (Auth::user()->role === 'admin') {
-            return Reservation::with(['client', 'voiture', 'agenceRetrait', 'agenceRetour'])->get();
+            return Reservation::with(['client.user', 'voiture', 'agenceRetrait', 'agenceRetour'])->get();
         }
-        return Reservation::with(['client', 'voiture', 'agenceRetrait', 'agenceRetour'])
+        return Reservation::with(['client.user', 'voiture', 'agenceRetrait', 'agenceRetour'])
             ->whereHas('client', function ($query) {
                 $query->where('user_id', Auth::id());
             })->get();
@@ -59,7 +59,7 @@ class ReservationController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Réservation créée avec succès',
-            'reservation' => $reservation,
+            'reservation' => $reservation->load(['client.user', 'voiture', 'agenceRetrait', 'agenceRetour']),
         ], 201);
     }
 
@@ -68,7 +68,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        return $reservation->load(['client', 'voiture', 'agenceRetrait', 'agenceRetour', 'paiement']);
+        return $reservation->load(['client.user', 'voiture', 'agenceRetrait', 'agenceRetour', 'paiement']);
     }
 
     /**
@@ -90,7 +90,7 @@ class ReservationController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Réservation mise à jour avec succès',
-            'reservation' => $reservation,
+            'reservation' => $reservation->load(['client.user', 'voiture', 'agenceRetrait', 'agenceRetour']),
         ], 200);
     }
 

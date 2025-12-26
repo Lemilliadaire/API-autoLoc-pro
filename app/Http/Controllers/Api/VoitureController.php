@@ -60,7 +60,7 @@ class VoitureController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Voiture créée avec succès',
-            'voiture' => $voiture,
+            'voiture' => $voiture->fresh(['images', 'categorie', 'agence']),
         ], 201);
     }
 
@@ -69,7 +69,7 @@ class VoitureController extends Controller
      */
     public function show(Voiture $voiture)
     {
-        return response()->json($voiture->load(['categorie', 'agence']));
+        return response()->json($voiture->load(['categorie', 'agence', 'images']));
     }
 
     /**
@@ -103,7 +103,7 @@ class VoitureController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Voiture mise à jour avec succès',
-            'voiture' => $voiture,
+            'voiture' => $voiture->fresh(['images', 'categorie', 'agence']),
         ], 200);
     }
 
